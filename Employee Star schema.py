@@ -11,11 +11,13 @@ df.columns = (
     .str.replace("-", "_")
 )
 
-# 3. Add EmployeeKey if not already available
+# 3. Add EmployeeKey as a primary key for the fact table
 df["EmployeeKey"] = range(1, len(df) + 1)
 
 # -----------------------------
-# Dimension Tables
+# Dimension Tables - with Primary keys 
+# Drop Duplicates to create unique dimension tables
+# Dimension Tables include : Department, Job type, Education, Gender, marital status, Business travel, Overtime, Attrition
 # -----------------------------
 
 def create_dimension(df, column_name, key_name):
@@ -34,7 +36,7 @@ dim_overtime = create_dimension(df, "OverTime", "OverTimeKey")
 dim_attrition = create_dimension(df, "Attrition", "AttritionKey")
 
 # -----------------------------
-# Merge Keys Back to Fact Table
+# Merge Keys Back to Fact Table- which will be the foriegn key used for modeling 
 # -----------------------------
 
 df = df.merge(dim_department, on="Department", how="left")
@@ -107,4 +109,4 @@ dim_businesstravel.to_csv(f"{output_folder}/DimBusinessTravel.csv", index=False)
 dim_overtime.to_csv(f"{output_folder}/DimOverTime.csv", index=False)
 dim_attrition.to_csv(f"{output_folder}/DimAttrition.csv", index=False)
 
-print("Star schema files created successfully!")
+print("Fact and Dimension tables created successfully!")
